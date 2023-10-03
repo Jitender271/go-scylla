@@ -1,0 +1,88 @@
+package interfaces
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/go-scylla/db"
+	"github.com/sirupsen/logrus"
+)
+
+type queryBuilder[T any] struct {
+	model   ITable
+	session db.ISessionx
+}
+
+func (queryBuilder *queryBuilder[T]) Insert(context context.Context, insertData *T) error {
+	insertStatement, insertNames := queryBuilder.model.Insert()
+	insertQuery := queryBuilder.session.Query(insertStatement, insertNames)
+	err := insertQuery.BindStruct(insertData).ExecRelease()
+	if err != nil {
+		logrus.Error(err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func (queryBuilder *queryBuilder[T]) Select(context context.Context, dataToGet *T) ([]T, error) {
+	selectStatement, selectNames := queryBuilder.model.Select()
+	selectQuery := queryBuilder.session.Query(selectStatement, selectNames)
+
+	var results []T
+	err := selectQuery.BindStruct(dataToGet).SelectRelease(&results)
+	if err != nil {
+		logrus.Error("Select error:", err.Error())
+		return nil, err
+	}
+
+	return results, nil
+
+}
+
+func (queryBuilder *queryBuilder[T]) Get(ctx context.Context, dataToGet *T) (*T, error) {
+	selectStatement, selectNames := queryBuilder.model.Get()
+	selectQuery := queryBuilder.session.Query(selectStatement, selectNames)
+
+	var result []T
+	err := selectQuery.BindStruct(dataToGet).WithContext(ctx).SelectRelease(&result)
+	if err != nil {
+		logrus.Error("Get error", err.Error())
+		return nil, err
+	}
+
+	if len(result) > 0 {
+		return &result[0], nil
+	}
+
+	return nil, nil
+}
+
+/*
+	It will everything from table.
+
+SELECT * FROM table;
+*/
+func (queryBuilder *queryBuilder[T]) SelectAll(ctx context.Context) ([]T, error) {
+	selectAllStatement, selectAllNames := queryBuilder.model.SelectAll()
+	fmt.Println(selectAllNames, selectAllNames)
+	selectAllQuery := queryBuilder.session.Query(selectAllStatement, selectAllNames)
+
+
+	var results []T
+	err := selectAllQuery.WithContext(ctx).SelectRelease(&results)
+	if err != nil {
+		logrus.Error("SelectAll error", err.Error())
+		return nil, err
+	}
+
+	return results, nil
+}
+
+func NewQueryBuilder[T any](model ITable, session db.ISessionx) *queryBuilder[T] {
+	return &queryBuilder[T]{
+		model:   model,
+		session: session,
+	}
+
+}
