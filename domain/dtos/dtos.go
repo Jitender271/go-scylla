@@ -5,6 +5,8 @@ import (
 	"fmt"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/go-scylla/internal/model"
+	"github.com/gocql/gocql"
 )
 
 type ReportingDataDTO struct {
@@ -41,4 +43,13 @@ func isValid(dto interface{}, dtoName string) error {
 	}
 
 	return nil
+}
+
+func ReportingDataDTOToEntity(dto *ReportingDataDTO) *model.ReportingDetail{
+	return &model.ReportingDetail{
+		ID: gocql.TimeUUID(),
+		Name: dto.Name,
+		Data: dto.Details,
+	}
+
 }
