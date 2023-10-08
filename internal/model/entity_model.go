@@ -1,12 +1,12 @@
 package model
 
 import (
-	
-	gocqlxtable "github.com/go-scylla/interfaces"
+	gocqlxtable "github.com/go-scylla/infrastructure/db/scylladb"
 	"github.com/scylladb/gocqlx/v2/table"
 )
 
 type TrackingDataTable struct {
+
 	Table gocqlxtable.ITable
 }
 

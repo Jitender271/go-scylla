@@ -9,5 +9,6 @@ import (
 
 type IReportingData interface{
 	AddReportingDetail(ctx context.Context, reportingData *dtos.ReportingDataDTO) (*dtos.ReportingDataDTO, error)
+	
 
 }

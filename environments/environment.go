@@ -11,11 +11,11 @@ func initializeDevEnv() {
 	os.Setenv("SCYLLA_HOSTS", "127.0.0.1:9042")
 	os.Setenv("HOST", "0.0.0.0")
 	os.Setenv("PORT", "4444")
-	os.Setenv("TLS_CERT_PATH", "./certs/localhost.pem")
-	os.Setenv("TLS_KEY_PATH", "./certs/localhost-key.pem")
+	os.Setenv("TLS_CERT_PATH", "")
+	os.Setenv("TLS_KEY_PATH", "")
 }
 
-func Init() {
+func init() {
 	ENV := os.Getenv("GO_ENV")
 
 	switch ENV {
