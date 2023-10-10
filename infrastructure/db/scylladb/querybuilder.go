@@ -62,7 +62,7 @@ func (queryBuilder *queryBuilder[T]) Delete(ctx context.Context, dataToBeDeleted
 	fmt.Print(deleteName, deleteStatment)
 	deleteQuery := queryBuilder.session.Query(deleteStatment, deleteName)
 
-	if err := deleteQuery.BindStruct(deleteQuery).WithContext(ctx).ExecRelease(); err != nil{
+	if err := deleteQuery.BindStruct(dataToBeDeleted).WithContext(ctx).ExecRelease(); err != nil{
 		logrus.Error("Delete error", err.Error())
 		return err
 
