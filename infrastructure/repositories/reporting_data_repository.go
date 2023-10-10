@@ -25,6 +25,27 @@ func (repo *reportingDataRepository) AddReportingDetail(ctx context.Context, rep
 	return reportingData, nil
 }
 
+func (repo *reportingDataRepository) GetReportingDetail(ctx context.Context, reportingData *dtos.ReportingDataPrimaryDTO) (*dtos.ReportingDetailDataDTO, error){
+	result, err := repo.queryBuilder.Get(ctx, reportingDataPrimaryKeyDTOToEntity(reportingData))
+	if err != nil{
+		logrus.Error("could not add tracking data. error: ", err.Error())
+		return nil, err
+
+	}
+	if result == nil {
+		return nil, nil
+	}
+	return reportingDataEntityToDTO(result), nil
+}
+
+func (repo *reportingDataRepository) DeleteReportingDetail(ctx context.Context, reportingData *dtos.ReportingDataPrimaryDTO)error{
+	if err := repo.queryBuilder.Delete(ctx, reportingDataPrimaryKeyDTOToEntity(reportingData)); err!=nil{
+		logrus.Error("could not delete tracking data using primary key. error:  ", err.Error())
+		return err
+	}
+	return nil
+}
+
 
 func reportingDataDTOToEntity(dto *dtos.ReportingDataDTO) *model.ReportingDetail{
 
@@ -35,6 +56,28 @@ func reportingDataDTOToEntity(dto *dtos.ReportingDataDTO) *model.ReportingDetail
 	}
 	return reportingDataEntity
 }
+
+func reportingDataPrimaryKeyDTOToEntity(dto *dtos.ReportingDataPrimaryDTO) (*model.ReportingDetail) {
+	uuid, err := gocql.ParseUUID(dto.ID)
+	if err != nil {
+        logrus.Fatalf("Error converting string to gocql.UUID: %v", err)
+    }
+	reportingDataEntity := &model.ReportingDetail{
+		ID: uuid,
+	}
+
+	return reportingDataEntity
+}
+
+func reportingDataEntityToDTO(model *model.ReportingDetail) (*dtos.ReportingDetailDataDTO) {
+	return &dtos.ReportingDetailDataDTO{
+		ID: model.ID.String(),
+		Name: model.Name,
+		Details: model.Data,
+	}
+	
+}
+
 
 func NewReportingDataRepository(querybuilder interfaces.IQueryBuilder[model.ReportingDetail]) *reportingDataRepository {
 	return &reportingDataRepository{

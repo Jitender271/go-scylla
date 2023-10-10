@@ -57,6 +57,21 @@ func (queryBuilder *queryBuilder[T]) Get(ctx context.Context, dataToGet *T) (*T,
 	return nil, nil
 }
 
+func (queryBuilder *queryBuilder[T]) Delete(ctx context.Context, dataToBeDeleted *T)(error){
+	deleteStatment, deleteName := queryBuilder.model.Delete()
+	fmt.Print(deleteName, deleteStatment)
+	deleteQuery := queryBuilder.session.Query(deleteStatment, deleteName)
+
+	if err := deleteQuery.BindStruct(deleteQuery).WithContext(ctx).ExecRelease(); err != nil{
+		logrus.Error("Delete error", err.Error())
+		return err
+
+	}
+
+	return nil
+
+}
+
 /*
 	It will everything from table.
 

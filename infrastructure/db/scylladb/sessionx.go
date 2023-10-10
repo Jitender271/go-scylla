@@ -57,3 +57,25 @@ func WrapSession(session *gocql.Session, err error) (ISessionx, error) {
 		&gocqlxSession,
 	}, wrapErr
 }
+
+
+type ISess interface{
+	Kuery(name string)(bool)
+}
+
+type Sessi struct{
+	SS *gocqlx.Session
+}
+
+func(ss *Sessi) Kuery(name string)(bool){
+	 return ss.SS.Closed()
+
+}
+
+func WS(sessn *gocql.Session, err error)(ISess){
+	gocqlxSession, _ := gocqlx.WrapSession(sessn, err)
+	return &Sessi{
+		&gocqlxSession,
+	}
+
+}

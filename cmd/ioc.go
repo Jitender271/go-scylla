@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	//"context"
-	"os"
+
 	"strings"
+	"os"
 
 	"github.com/go-scylla/application/cases"
 	_ "github.com/go-scylla/environments"
@@ -44,12 +44,14 @@ func NewContainer() *Container {
 
 	/* Use cases */
 	createTrackingDataUsecase := cases.NewReportingData(reportingDataRepo)
+	getReportingDataUseCase := cases.GetReportingData(reportingDataRepo)
+	deleteReportingDataUseCase := cases.DeleteReportingData(reportingDataRepo)
 
 	/* HTTP server */
 	httpServer := httpserver.NewHTTPServer()
 
 	/* Handlers */
-	routingHandler := handlers.NewReportingDataHandler(createTrackingDataUsecase)
+	routingHandler := handlers.NewReportingDataHandler(createTrackingDataUsecase, getReportingDataUseCase, deleteReportingDataUseCase)
 
 	/* Routes (Presenters) */
 	trackingPresenter := presenters.NewDataPresenter(routingHandler)

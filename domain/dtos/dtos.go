@@ -14,10 +14,14 @@ type ReportingDataDTO struct {
 	Details string `json:"details" validate:"required"`
 }
 
-type ReportingDataPrimaryDTO struct {
+type ReportingDetailDataDTO struct {
 	ID		string	`json:"id" validate:"required"`
 	Name    string `json:"name" validate:"required"`
 	Details string `json:"details" validate:"required"`
+}
+
+type ReportingDataPrimaryDTO struct {
+	ID		string	`json:"id" validate:"required"`
 }
 
 func ParseJson(data []byte, dto interface{}, dtoName string) error {
@@ -30,6 +34,8 @@ func ParseJson(data []byte, dto interface{}, dtoName string) error {
 	if err != nil {
 		return fmt.Errorf("[isValid] Error: %s", err.Error())
 	}
+
+	fmt.Print(err)
 
 	return nil
 }
