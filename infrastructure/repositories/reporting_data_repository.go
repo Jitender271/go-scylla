@@ -54,7 +54,7 @@ func (repo *reportingDataRepository) GetAllReportingDetail(ctx context.Context)(
 	if result == nil{
 		return nil, nil
 	}
-	var reportingData[] *dtos.ReportingDetailDataDTO
+	reportingData := make([]*dtos.ReportingDetailDataDTO, 0, len(result))
 
 	for _, value := range result{
 
