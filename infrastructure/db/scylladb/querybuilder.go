@@ -82,7 +82,6 @@ func (queryBuilder *queryBuilder[T]) SelectAll(ctx context.Context) ([]T, error)
 	fmt.Println(selectAllNames, selectAllNames)
 	selectAllQuery := queryBuilder.session.Query(selectAllStatement, selectAllNames)
 
-
 	var results []T
 	err := selectAllQuery.WithContext(ctx).SelectRelease(&results)
 	if err != nil {

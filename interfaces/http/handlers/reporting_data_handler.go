@@ -11,6 +11,7 @@ type IReportingDataHandler interface{
 	Create(httprequest httpserver.HttpRequest) httpserver.HttpResponse
 	FindByPrimaryKey(httprequest httpserver.HttpRequest) httpserver.HttpResponse
 	DeleteByPrimaryKey(httprequest httpserver.HttpRequest) httpserver.HttpResponse
+	GetAll(httpserver httpserver.HttpRequest) httpserver.HttpResponse
 }
 
 
@@ -19,6 +20,7 @@ type reportingHandler struct{
 	createReporting  cases.ICreateReportingDataRepo
 	findByPrimaryKey  cases.IGetReportingDataRepo
 	deleteByPrimaryKey cases.IDeleteUseCase
+	getAllReportingData cases.IGetAllReportingData
 
 }
 
@@ -73,12 +75,22 @@ func (reportinghandler *reportingHandler) DeleteByPrimaryKey(request httpserver.
 	return reportinghandler.httpResponseFactory.Ok(nil, nil)
 }
 
-func NewReportingDataHandler(createReportingData  cases.ICreateReportingDataRepo, getReportingData cases.IGetReportingDataRepo, deleteReportingData cases.IDeleteUseCase) *reportingHandler{
+func (reportingHandler *reportingHandler) GetAll(request httpserver.HttpRequest) httpserver.HttpResponse{
+	result, err := reportingHandler.getAllReportingData.Perform(request.Ctx)
+	if err!=nil{
+		reportingHandler.httpResponseFactory.ErrorResponseMapper(err, nil)
+	}
+	return reportingHandler.httpResponseFactory.Ok(result, nil)
+
+}
+
+func NewReportingDataHandler(createReportingData  cases.ICreateReportingDataRepo, getReportingData cases.IGetReportingDataRepo, deleteReportingData cases.IDeleteUseCase, getAllReportingData cases.IGetAllReportingData) *reportingHandler{
 	httpResponseFactory := factories.NewHttpResponseFactory()
 	return &reportingHandler{
 		httpResponseFactory,
 		createReportingData,
 		getReportingData,
 		deleteReportingData,
+		getAllReportingData,
 	}
 }

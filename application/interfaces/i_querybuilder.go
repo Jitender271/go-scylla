@@ -10,5 +10,5 @@ type IQueryBuilder[t T] interface {
 	//DeleteAllFromPartitioningKey(ctx context.Context, dataToBeDeleted *t) error
 	//Select(ctx context.Context, dataToGet *t) ([]t, error)
 	Get(ctx context.Context, dataToGet *t) (*t, error)
-	//SelectAll(ctx context.Context) ([]t, error)
+	SelectAll(ctx context.Context) ([]t, error)
 }

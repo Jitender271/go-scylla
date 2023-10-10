@@ -30,7 +30,6 @@ func (repo *reportingDataRepository) GetReportingDetail(ctx context.Context, rep
 	if err != nil{
 		logrus.Error("could not add tracking data. error: ", err.Error())
 		return nil, err
-
 	}
 	if result == nil {
 		return nil, nil
@@ -44,6 +43,25 @@ func (repo *reportingDataRepository) DeleteReportingDetail(ctx context.Context, 
 		return err
 	}
 	return nil
+}
+
+func (repo *reportingDataRepository) GetAllReportingDetail(ctx context.Context)([]*dtos.ReportingDetailDataDTO, error){
+	result, err := repo.queryBuilder.SelectAll(ctx)
+	if err != nil{
+		logrus.Error("could not get reporting data. error:", err.Error())
+		return nil, err
+	}
+	if result == nil{
+		return nil, nil
+	}
+	var reportingData[] *dtos.ReportingDetailDataDTO
+
+	for _, value := range result{
+
+		reportingData = append(reportingData, reportingDataEntityToDTO(&value))
+
+	}
+	return reportingData, nil
 }
 
 

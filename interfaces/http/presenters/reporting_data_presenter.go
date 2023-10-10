@@ -16,6 +16,7 @@ func (presenter *reportingDataPresenter) Register(httpserver httpserver.IHTTPSer
 	httpserver.RegisterRoute("POST" , "api/v1/reporting", adapters.HandlerAdapter(presenter.handler.Create))
 	httpserver.RegisterRoute("POST" , "api/v1/report", adapters.HandlerAdapter(presenter.handler.FindByPrimaryKey))
 	httpserver.RegisterRoute("DELETE" , "api/v1/delete/report", adapters.HandlerAdapter(presenter.handler.DeleteByPrimaryKey))
+	httpserver.RegisterRoute("GET", "api/v1/getall/report", adapters.HandlerAdapter(presenter.handler.GetAll))
 
 }
 

@@ -46,12 +46,13 @@ func NewContainer() *Container {
 	createTrackingDataUsecase := cases.NewReportingData(reportingDataRepo)
 	getReportingDataUseCase := cases.GetReportingData(reportingDataRepo)
 	deleteReportingDataUseCase := cases.DeleteReportingData(reportingDataRepo)
+	getAllReportingDataUseCase := cases.GetAllReportingDetailData(reportingDataRepo)
 
 	/* HTTP server */
 	httpServer := httpserver.NewHTTPServer()
 
 	/* Handlers */
-	routingHandler := handlers.NewReportingDataHandler(createTrackingDataUsecase, getReportingDataUseCase, deleteReportingDataUseCase)
+	routingHandler := handlers.NewReportingDataHandler(createTrackingDataUsecase, getReportingDataUseCase, deleteReportingDataUseCase, getAllReportingDataUseCase)
 
 	/* Routes (Presenters) */
 	trackingPresenter := presenters.NewDataPresenter(routingHandler)
