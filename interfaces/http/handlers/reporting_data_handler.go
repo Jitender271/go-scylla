@@ -21,7 +21,6 @@ type reportingHandler struct{
 	findByPrimaryKey  cases.IGetReportingDataRepo
 	deleteByPrimaryKey cases.IDeleteUseCase
 	getAllReportingData cases.IGetAllReportingData
-
 }
 
 

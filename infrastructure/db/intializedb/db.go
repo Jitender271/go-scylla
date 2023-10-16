@@ -36,7 +36,7 @@ func (conn *scyllaDBConnection) createSession(cluster *gocql.ClusterConfig) (scy
 	session, err := scylladb.WrapSession(cluster.CreateSession())
 	if err != nil {
 		fmt.Println("An error occurred while creating DB session", err.Error())
-		return session, err
+		return nil, err
 	}
 	return session, nil
 }
